@@ -1,7 +1,6 @@
 import piexif
 
-#path = r'D:\huawei\tmp\mmexport1590448439994.jpg'
-from PIL import Image
+# path = r'D:\huawei\tmp\mmexport1590448439994.jpg'
 
 path = r'D:\huawei\tmp\IMG_20200411_105746.jpg'
 new_exif = {}
@@ -19,10 +18,9 @@ except Exception as err:
     # 1. cover1588259702226.png
     ms = 0
 
-
 # new_exif = adjust_exif(exif_dict)
 exif_dict = {"Exif": new_exif}
 # print(exif_dict)
-#exif_bytes = piexif.dump(exif_dict)
-#piexif.insert(exif_bytes, path)
-#im.save(path, "jpeg", exif=exif_bytes)
+# exif_bytes = piexif.dump(exif_dict)
+# piexif.insert(exif_bytes, path)
+# im.save(path, "jpeg", exif=exif_bytes)

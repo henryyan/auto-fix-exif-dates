@@ -4,7 +4,7 @@ import PIL.Image
 from PIL import Image
 
 img = PIL.Image.open('D:\\huawei\\photo\\2020.4\\IMG_20200410_161219.jpg')
-#img = PIL.Image.open('D:\\huawei\\tmp\\cover1588259702226.png')
+# img = PIL.Image.open('D:\\huawei\\tmp\\cover1588259702226.png')
 exif_data = img.getexif()
 print("exif data:{}".format(exif_data))
 

@@ -1,4 +1,5 @@
 from datetime import datetime
+
 import piexif
 
 filename = 'cover1588259702226.jpg'
