@@ -32,7 +32,7 @@ def cal_datetime(filename, fmt_str, default_year, default_month):
     if len(new_date) == 0:
         new_date = datetime(default_year, default_month, 1, 0, 0, 0).strftime("%Y-%m-%d %H:%M:%S")
 
-    print("\tget final date: {} for file； {}".format(new_date, filename))
+    print("\tget final date: {} for file: {}".format(new_date, filename))
     return new_date
 
 if __name__ == '__main__':

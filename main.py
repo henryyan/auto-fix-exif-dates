@@ -13,21 +13,23 @@ from piexif import InvalidImageDataError
 
 from utils import cal_datetime
 
-_default_year = 2020
+_default_year = 2015
 _default_month = 12
 
 # Press the green button in the gutter to run the script.
 # 参考文档： https://stackoverflow.com/questions/33031663/how-to-change-image-captured-date-in-python
 if __name__ == '__main__':
-    photo_dir = "D:\\huawei\\wenwen-photo-huawei\\{}.{}".format(_default_year, _default_month)
+    photo_dir = "D:\\zhaopian\\{}.{}".format(_default_year, _default_month)
     for filename in os.listdir(photo_dir):
         file_path = os.path.join(photo_dir, filename)
         print("handling file: {} ...".format(file_path))
         try:
+            filename = filename.lower()
             if not filename.endswith("jpg") and not filename.endswith("png") and not filename.endswith("mp4"):
+                print("\tinvalid filename: {}".format(filename))
                 continue
 
-            if filename.startswith(".VID"):
+            if filename.startswith(".vid"):
                 continue
 
             # remove repeat files
@@ -71,29 +73,40 @@ if __name__ == '__main__':
             paths = Path(file_path).stem
 
             if filename.endswith("jpg") or filename.endswith("jpeg"):
-                new_exif = piexif.load(file_path)
+                try:
+                    new_exif = piexif.load(file_path)
+                except:
+                    print("\tfailed read exif info: {}".format(file_path))
+                    continue
 
                 print("\thandle jpg file: {}".format(filename))
                 # print("\t get exif: {}".format(new_exif))
-                if not new_exif.__contains__(piexif.ExifIFD.DateTimeOriginal):
+                # print("\t get date: {}".format(new_exif["{}".format(piexif.ExifIFD.DateTimeOriginal)]))
+                # print("\t get date: {}".format(new_exif["Exif"].__contains__(piexif.ExifIFD.DateTimeOriginal)))
+                if not new_exif.__contains__(piexif.ExifIFD.DateTimeOriginal) and not new_exif["Exif"].__contains__(piexif.ExifIFD.DateTimeOriginal):
                     # new_exif = set_exif(new_exif)
                     new_exif['0th'][piexif.ImageIFD.DateTime] = create_time_v2
                     new_exif['Exif'][piexif.ExifIFD.DateTimeOriginal] = create_time_v2
                     new_exif['Exif'][piexif.ExifIFD.DateTimeDigitized] = create_time_v2
-                    # print("abc: {}".format(new_exif))
+                    print("abc: {}".format(new_exif))
                     # "dump" got wrong type of exif value.\n41729 in Exif IFD. Got as <class \'int\'>.
                     # See bug https://github.com/hMatoba/Piexif/issues/95
                     try:
                         del new_exif['Exif'][piexif.ExifIFD.SceneType]
                     except:
                         pass
-                    exif_bytes = piexif.dump(new_exif)
-                    piexif.insert(exif_bytes, file_path)
+                    try:
+                        exif_bytes = piexif.dump(new_exif)
+                        piexif.insert(exif_bytes, file_path)
+                    except:
+                        print("\t failed to dump exif: {}", file_path)
+                        continue
 
             # remove png files
             if len(png_filepath) > 0:
                 print("\tremove png file: {}".format(png_filepath))
                 os.remove(png_filepath)
+
 
         except InvalidImageDataError as err:
             print("get err: {}".format(err))
